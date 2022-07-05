@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>구구단</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- 결과: <div id="root"><button>Like</button></div> -->
+    <script type="text/babel">
+      class GuGuDan extends React.Component {
+        // constructor, props는 안써줘도 된다.
+        state = {
+          first: Math.ceil(Math.random() * 9),
+          second: Math.ceil(Math.random() * 9),
+          value: '',
+          result: '',
+        };
+
+        // 함수로 뺐을 때는 무조건 화살표 함수로 사용해야 함 -> this의 위치가 달라지기 때문, render같은 함수는 function가능
+        onSubmit = (e) => {
+          e.preventDefault();
+          if (
+            parseInt(this.state.value) ===
+            this.state.first * this.state.second
+          ) {
+            // setState는 비동기이기 때문에 이전 정보를 리턴해주도록 함수를 사용하자.
+            this.setState((prevState) => {
+              return {
+                result: '정답: ' + prevState.value,
+                first: Math.ceil(Math.random() * 9),
+                second: Math.ceil(Math.random() * 9),
+                value: '',
+              };
+            });
+            this.input.focus();
+          } else {
+            this.setState({
+              result: '땡',
+              value: '',
+            });
+            this.input.focus();
+          }
+        };
+
+        onChange = (e) => {
+          this.setState({ value: e.target.value });
+        };
+
+        input;
+
+        onRefInput = (c) => {
+          this.input = c;
+        };
+
+        // 컨텐츠 () : 그룹 연산자, 보통 우선순위 높일 때만 사용함
+        // 폼이 있으면 서브밋을 안써주는데 폼이 없으면 버튼 내에 온클릭으로 서브밋을 넣어준다.
+        render() {
+          console.log('렌더링');
+          return (
+            <React.Fragment>
+              <div>
+                {this.state.first} 곱하기 {this.state.second}는?
+              </div>
+              <form onSubmit={this.onSubmit}>
+                <input
+                  ref={this.onRefInput}
+                  type="number"
+                  value={this.state.value}
+                  onChange={this.onChange}
+                />
+                <button>입력!</button>
+              </form>
+              <div>{this.state.result}</div>
+            </React.Fragment>
+          );
+        }
+      }
+    </script>
+    <script type="text/babel">
+      ReactDOM.createRoot(document.querySelector('#root')).render(<GuGuDan />);
+    </script>
+  </body>
+</html>
