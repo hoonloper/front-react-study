@@ -1,4 +1,5 @@
 const path = require('path');
+const { webpack } = require('webpack');
 // const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = {
@@ -29,6 +30,9 @@ module.exports = {
       },
     ],
   },
+
+  // 확장 프로그램
+  plugins: [new webpack.LoaderOptionsPlugin({ debug: true })],
 
   // 출력 설정
   output: {
