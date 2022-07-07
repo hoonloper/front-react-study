@@ -1,37 +1,42 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [inputs, setInputs] = useState({
-    name: '',
-    nickname: '',
-  });
-  const [inputContent, setInputContent] = useState('');
+  const [list, setList] = useState([]);
+  const [content, setContent] = useState('');
+
+  useEffect(() => {
+    getListData();
+  }, []);
+
+  const getListData = async () => {
+    const { data } = await axios.get('http://localhost:3001/api/todo');
+    const newData = data.data.map((toDo) => toDo);
+
+    list.push(...newData);
+
+    setList(newData);
+  };
 
   const onChange = (e) => {
-    const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
-    setInputs({
-      ...inputs, // 기존의 input 객체를 복사한 뒤
-      [name]: value, // name 키를 가진 값을 value 로 설정
-    });
+    const content = e.target.value;
+
+    setContent(content);
   };
 
-  const addToDoList = (e) => {
-    const content = e.target;
-    console.log(content);
-    setInputContent(content);
+  const addContent = () => {
+    list.push({ description: content });
+
+    setList([...list]);
   };
-  // const [a, setA] = useState([1, 2, 3, 4, 5]);
-  // const plusNumber = () => {
-  //   const arr = [...a];
-  //   setA([...arr]);
-  // };
-  const test = () => {
-    // add 눌럿을 때 실행할 애들
+
+  const deleteToDo = (e) => {
+    const target = e.currentTarget.id;
+    const filterdList = list.filter(({ id }) => id !== +target);
+
+    setList(filterdList);
   };
-  // <input name="name" placeholder="이름" onChange={onChange} value={name} />
-  // <input name="nickname" placeholder="닉네임" onChange={onChange} value={nickname}/>
-  // <button onClick={onReset}>초기화</button>
 
   return (
     <div className="ToDoList">
@@ -48,20 +53,24 @@ function App() {
           />
         </div>
         <div>
-          <button onClick={test} className="InputBtn">
+          <button onClick={addContent} className="InputBtn">
             add
           </button>
         </div>
       </div>
-      <div>
-        <div className="ToDoBox">
-          <div className="ToDoDelete">X</div>
-          <div className="ToDoContent">할 일 1</div>
-          <div>
-            <button className="UpdateBtn">수정</button>
+      {list.map((content, index) => (
+        <div>
+          <div className="ToDoBox">
+            <div id={content.id} onClick={deleteToDo} className="ToDoDelete">
+              X
+            </div>
+            <div className="ToDoContent">{content.description}</div>
+            <div>
+              <button className="UpdateBtn">수정</button>
+            </div>
           </div>
         </div>
-      </div>
+      ))}
       {/* <React.Fragment>
         <h1>{a}</h1>
         <button onClick={plusNumber}>plus</button>
