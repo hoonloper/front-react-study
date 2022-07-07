@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
+  const END_POINT = 'http://localhost:3001/api/todo';
   const [list, setList] = useState([]);
   const [content, setContent] = useState('');
 
@@ -11,12 +12,19 @@ function App() {
   }, []);
 
   const getListData = async () => {
-    const { data } = await axios.get('http://localhost:3001/api/todo');
+    const { data } = await axios.get(END_POINT);
     const newData = data.data.map((toDo) => toDo);
 
     list.push(...newData);
 
     setList(newData);
+  };
+
+  const addToDoData = async (toDoData) => {
+    await axios
+      .post(END_POINT, toDoData)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
   };
 
   const onChange = (e) => {
@@ -25,10 +33,18 @@ function App() {
     setContent(content);
   };
 
-  const addContent = () => {
-    list.push({ description: content });
+  const addToDo = () => {
+    const toDoData = {
+      description: content,
+    };
+    list.push(toDoData);
 
+    addToDoData(toDoData);
     setList([...list]);
+  };
+
+  const updateToDo = () => {
+    console.log(updateToDo);
   };
 
   const deleteToDo = (e) => {
@@ -53,7 +69,7 @@ function App() {
           />
         </div>
         <div>
-          <button onClick={addContent} className="InputBtn">
+          <button onClick={addToDo} className="InputBtn">
             add
           </button>
         </div>
@@ -66,7 +82,9 @@ function App() {
             </div>
             <div className="ToDoContent">{content.description}</div>
             <div>
-              <button className="UpdateBtn">수정</button>
+              <button onClick={updateToDo} className="UpdateBtn">
+                수정
+              </button>
             </div>
           </div>
         </div>
