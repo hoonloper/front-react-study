@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
-  const END_POINT = 'http://localhost:3001/api/todo';
+  const END_POINT = 'http://localhost:3001/api/todo/';
   const [list, setList] = useState([]);
   const [content, setContent] = useState('');
 
@@ -41,6 +41,7 @@ function App() {
 
     addToDoData(toDoData);
     setList([...list]);
+    setContent('');
   };
 
   const updateToDo = () => {
@@ -48,10 +49,20 @@ function App() {
   };
 
   const deleteToDo = (e) => {
-    const target = e.currentTarget.id;
-    const filterdList = list.filter(({ id }) => id !== +target);
+    const target = +e.currentTarget.id;
+    const filterdList = list.filter(({ id }) => id !== target);
 
+    deleteToDoData(target);
     setList(filterdList);
+  };
+
+  const deleteToDoData = async (toDoId) => {
+    await axios
+      .delete(`${END_POINT}${toDoId}`, {
+        withCredentials: true,
+      })
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
   };
 
   return (
