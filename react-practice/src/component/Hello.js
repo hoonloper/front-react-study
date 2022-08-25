@@ -1,22 +1,20 @@
-export default function Hello() {
-  const showName = () => {
-    console.log("object");
-  };
+import { useState } from "react";
 
-  const showAge = (age) => {
-    console.log(age);
-  };
+export default function Hello(props) {
+  //   let name = "Mike";
+  console.log(props);
+  const [name, setName] = useState("Mike");
 
-  const showText = (e) => {
-    console.log(e.target.value);
+  const changeName = () => {
+    setName(name === "Mike" ? "Jane" : "Mike");
   };
 
   return (
     <div>
-      <h1>Hello</h1>
-      <button onClick={showName}>Show name</button>
-      <button onClick={showAge(10)}>Show age</button>
-      <input type="text" onChange={showText}></input>
+      <h2 id="name">
+        {name}({props})
+      </h2>
+      <button onClick={changeName}>Change</button>
     </div>
   );
 }
