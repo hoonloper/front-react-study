@@ -1,21 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
 import Word from "./Word";
 
 export default function Day() {
   const { day } = useParams();
-  // const wordList = dummy.words.filter((word) => word.day === Number(day));
-  const [words, setWords] = useState([]);
-
-  useEffect(() => {
-    fetch(`http://localhost:3001/words?day=${day}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setWords(data);
-      });
-  }, [day]); // 상태값이 바뀌었을 때 동작
+  const words = useFetch(`http://localhost:3001/words?day=${day}`);
 
   return (
     <>
