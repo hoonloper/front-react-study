@@ -48,6 +48,20 @@
       "eng": "yyyyyy",
       "kor": "A",
       "isDone": false
+    },
+    {
+      "day": "2",
+      "eng": "tes",
+      "kor": "테스",
+      "isDone": false,
+      "id": 7
+    },
+    {
+      "day": "3",
+      "eng": "gogo",
+      "kor": "가가",
+      "isDone": false,
+      "id": 8
     }
   ]
 }
